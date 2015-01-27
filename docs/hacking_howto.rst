@@ -1,7 +1,7 @@
 .. _hacking-howto-chapter:
 
 ==============================
-Hacking HOWTO for Contributors
+Install in Ubuntu
 ==============================
 
 .. contents::
@@ -11,18 +11,28 @@ Hacking HOWTO for Contributors
 Summary
 =======
 
-This chapter helps you get a minimal installation of Kitsune up and
-running to make it easier to contribute.
+This Chapter helps you to easily install Kitsune in Ubuntu based distributions.
+Follow the below instruction in order to install Kitsune.
 
-If you're setting Kitsune up for deployment, instead of development, make
-sure you read all the way to the end and then read the additional sections.
-
-If you have any problems getting Kitsune running, let us know. See the
+If you have any problems getting Kitsune running in Ubuntu, you can let us know. We will try togather to figure out
+how to fix the issue. See the 
 :ref:`contact-us-chapter`.
 
 
-Operating systems
+Getting Source
 =================
+For getting the source of Kitsune, you must have '''git''' installed in your machine. For more information on
+installing git in your machine, please see <https://help.ubuntu.com/lts/serverguide/git.html>`_
+
+Without git, you can also get the source in zip. More information is provided in But this method is not recommanded because you can not push anything to the repository. '''If you are using a slow connection, you can use this method in order to test your patch.
+
+Git
+---
+With git you can pull the source code of Kitsune. As Kitsune is an Open Source Project, its full source is in Github. for cloning the source of Kitsune do following:
+# Open Terminal
+# Run ::
+
+$ git clone https://github.com/mozilla/kitsune.git
 
 Windows
 -------
