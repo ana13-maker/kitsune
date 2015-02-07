@@ -24,18 +24,44 @@ Getting Source
 For getting the source of Kitsune, you must have '''git''' installed in your machine. For more information on
 installing git in your machine, please see <https://help.ubuntu.com/lts/serverguide/git.html>`_
 
-Without git, you can also get the source in zip. More information is provided in But this method is not recommanded because you can not push anything to the repository. '''If you are using a slow connection, you can use this method in order to test your patch.
+Without git, you can also get the source in zip.
+But this method is not recommanded because you can not push anything to the repository.
+'''If you are using a slow connection, you can use this method in order to test your patch.'''
 
 Git
 ---
-With git you can pull the source code of Kitsune. As Kitsune is an Open Source Project, its full source is in Github. for cloning the source of Kitsune do following:
+With git you can pull the source code of Kitsune. As Kitsune is an Open Source Project, its full source is in Github.
+For cloning the source of Kitsune do following:
 # Open Terminal
 # Run ::
 
 $ git clone https://github.com/mozilla/kitsune.git
+::
 
-Windows
--------
+Install Requirements
+====================
+You need to install these packages as they are required for the minimum installation of kitsune.
+
+* git
+* Python 2.7
+* pip: `<http://www.pip-installer.org/en/latest/>`_
+* virtualenv
+* MariaDB 5.5 server and client headers
+* Memcached Server
+* libxml and headers
+* libxslt and headers
+* libjpeg and headers
+* zlib and headers
+* libssl and headers
+
+'''For installing the packages, run the following commands into terminal'''
+
+git
+---
+::
+
+$ sudo apt-get install git
+::
 
 If you're using Windows as your operating system, you'll need to set
 up a virtual machine and run Kitsune in that. Kitsune won't run in
