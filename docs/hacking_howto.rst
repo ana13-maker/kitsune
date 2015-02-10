@@ -43,7 +43,6 @@ Install Requirements
 You need to install these packages as they are required for the minimum installation of kitsune.
 
 * git
-* Python 2.7
 * pip: `<http://www.pip-installer.org/en/latest/>`_
 * virtualenv
 * MariaDB 5.5 server and client headers
@@ -63,6 +62,38 @@ git
 $ sudo apt-get install git
 ::
 
+pip
+---
+For installing pip, download this file [[https://bootstrap.pypa.io/get-pip.py pip]]. After dwonloading, copy this file
+to the Desktop.
+Then, Open the Terminal and run the following command 
+::
+
+$ cd Desktop
+$ sudo python get-pip.py
+::
+
+Virtualenv
+----------
+Run the following command in terminal to install virtualenv
+::
+
+$ sudo pip install virtualenv
+::
+
+MariaDB 5,5 servers and client headers
+--------------------------------------
+To install the MariaDB server 5.5 and client headers, run as following::
+
+$ sudo apt-get install mariadb-server-5.5 libmysqlclient
+::
+
+Memcached Server
+---------------
+::
+
+$ sudo apt-get install memcached
+::
 If you're using Windows as your operating system, you'll need to set
 up a virtual machine and run Kitsune in that. Kitsune won't run in
 Windows.
