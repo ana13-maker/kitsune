@@ -1239,8 +1239,6 @@ class ReviewRevisionTests(TestCaseBase):
     def review_passed_revision(self):
         """Verify that the ready for l10n icon is only present on en-US."""
         d = _create_document()
-        user_ = user(save=True)
-        add_permission(user, Revision, 'review_revision')
         r1 = revision(document=d, is_approved=False)
         r1.save()
 
