@@ -1241,9 +1241,11 @@ class ReviewRevisionTests(TestCaseBase):
         d = _create_document()
         user_ = user(save=True)
         add_permission(user, Revision, 'review_revision')
-        r1 = revision(document=d, is_approved=False, save=True)
+        r1 = revision(document=d, is_approved=False)
+        r1.save()
 
-        r2 = revision(document=d, is_approved=True, save=True)
+        r2 = revision(document=d, is_approved=True)
+        r2.save()
 
         response = get(self.client, 'wiki.review_revision',
                        args=[d.slug, r1.id])
