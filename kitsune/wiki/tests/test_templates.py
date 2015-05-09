@@ -1238,11 +1238,13 @@ class ReviewRevisionTests(TestCaseBase):
 
     def review_passed_revision(self):
         """Verify that the ready for l10n icon is only present on en-US."""
-        d = _create_document()
-        r1 = revision(document=d, is_approved=False)
+        d = self.document
+        r1 = revision(document=d, is_approved=False, summary="a tweak", content='lorem ipsum dolor',
+        keywords='kw1 kw2', creator=self.user)
         r1.save()
 
-        r2 = revision(document=d, is_approved=True)
+        r2 = revision(document=d, is_approved=True, summary="a tweak", content='lorem ipsum',
+        keywords='kw1 kw2', creator=self.user)
         r2.save()
 
         response = get(self.client, 'wiki.review_revision',
