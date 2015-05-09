@@ -1250,8 +1250,9 @@ class ReviewRevisionTests(TestCaseBase):
         eq_(200, response.status_code)
         doc = pq(response.content)
         doc_content = doc('#review-revision')
-        message = "A newer revision has already been reviewed."
-        assert message in doc_content
+        message = 'A newer revision has already been reviewed.'
+        check = doc_content.find(message)
+        eq_(1, check)
 
     def test_fancy_renderer(self):
         """Make sure it renders the whizzy new wiki syntax."""
