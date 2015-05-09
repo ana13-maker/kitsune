@@ -1236,6 +1236,23 @@ class ReviewRevisionTests(TestCaseBase):
         add_permission(self.user, Document, 'edit_needs_change')
         self.client.login(username=self.user.username, password='testpass')
 
+    def review_passed_revision(self):
+        """Verify that the ready for l10n icon is only present on en-US."""
+        d = _create_document()
+        user_ = user(save=True)
+        add_permission(user, Revision, 'review_revision')
+        r1 = revision(document=d, is_approved=False, save=True)
+
+        r2 = revision(document=d, is_approved=True, save=True)
+
+        response = get(self.client, 'wiki.review_revision',
+                       args=[d.slug, r1.id])
+        eq_(200, response.status_code)
+        doc = pq(response.content)
+        doc_content = doc('#review-revision')
+        message = "A newer revision has already been reviewed."
+        assert message in doc_content
+
     def test_fancy_renderer(self):
         """Make sure it renders the whizzy new wiki syntax."""
         # The right branch of the template renders only when there's no current

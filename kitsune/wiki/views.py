@@ -542,6 +542,21 @@ def review_revision(request, document_slug, revision_id):
     revision_contributors = list(set(
         based_on_revs.values_list('creator__username', flat=True)))
 
+    # Get latest revision which is still not approved. Use "latest_revision.id" to get the id.
+    try:
+        latest_revision = Revision.objects.filter(
+            document=doc,
+            is_approved=False).order_by('-created')[0]
+        latest_revision_id = latest_revision.id
+    except IndexError:
+        latest_revision_id = None
+
+    # Get Current Revision if "only" there is any approved revision.
+    if doc.current_revision is not None:
+        current_revision_id = doc.current_revision.id
+    else:
+        current_revision_id = None
+
     # Don't include the reviewer in the recent contributors list.
     if request.user.username in revision_contributors:
         revision_contributors.remove(request.user.username)
@@ -625,7 +640,9 @@ def review_revision(request, document_slug, revision_id):
     data = {'revision': rev, 'document': doc, 'form': form,
             'parent_revision': parent_revision,
             'revision_contributors': list(revision_contributors),
-            'should_ask_significance': should_ask_significance}
+            'should_ask_significance': should_ask_significance,
+            'latest_revision_id': latest_revision_id,
+            'current_revision_id': current_revision_id}
     return render(request, template, data)
 
 
