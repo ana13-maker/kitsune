@@ -4,7 +4,7 @@ import json
 
 from django.conf import settings
 from django.contrib.sites.models import Site
-from django.core import mailew
+from django.core import mail
 from django.core.cache import cache
 from django.utils.encoding import smart_str
 
