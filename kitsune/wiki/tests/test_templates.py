@@ -1248,8 +1248,8 @@ class ReviewRevisionTests(TestCaseBase):
                        args=[r1.document.slug, r1.id])
         eq_(200, response.status_code)
         doc = pq(response.content)
-        doc_content = doc('review-revision').text()
-        message = 'A newer revision has already been reviewed.'
+        doc_content = doc('.grid_9 #review-revision').text()
+        message = "A newer revision has already been reviewed."
         assert message in doc_content
 
     def test_fancy_renderer(self):
