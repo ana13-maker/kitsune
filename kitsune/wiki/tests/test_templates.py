@@ -4,7 +4,7 @@ import json
 
 from django.conf import settings
 from django.contrib.sites.models import Site
-from django.core import mail
+from django.core import mailew
 from django.core.cache import cache
 from django.utils.encoding import smart_str
 
@@ -1236,10 +1236,11 @@ class ReviewRevisionTests(TestCaseBase):
         add_permission(self.user, Document, 'edit_needs_change')
         self.client.login(username=self.user.username, password='testpass')
 
-    def review_passed_revision(self):
-        """Verify that the ready for l10n icon is only present on en-US."""
+    def test_review_passed_revision(self):
+        """Verify that its not possible to review a revision which is older than the current revision"""
         r1 = revision(is_approved=False, save=True)
-        r2 = revision(document=r1.document, is_approved=True, save=True)
+        r2 = revision(document=r1.document, is_approved=True)
+        r2.save()
         u = user(save=True)
         add_permission(u, Revision, 'review_revision')
         self.client.login(username=u.username, password='testpass')
