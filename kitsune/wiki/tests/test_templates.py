@@ -1238,23 +1238,19 @@ class ReviewRevisionTests(TestCaseBase):
 
     def review_passed_revision(self):
         """Verify that the ready for l10n icon is only present on en-US."""
-        d = self.document
-        r1 = revision(document=d, is_approved=False, summary="a tweak", content='lorem ipsum dolor',
-        keywords='kw1 kw2', creator=self.user)
-        r1.save()
-
-        r2 = revision(document=d, is_approved=True, summary="a tweak", content='lorem ipsum',
-        keywords='kw1 kw2', creator=self.user)
-        r2.save()
+        r1 = revision(is_approved=False, save=True)
+        r2 = revision(document=r1.document, is_approved=True, save=True)
+        u = user(save=True)
+        add_permission(u, Revision, 'review_revision')
+        self.client.login(username=u.username, password='testpass')
 
         response = get(self.client, 'wiki.review_revision',
-                       args=[d.slug, r1.id])
+                       args=[r1.document.slug, r1.id])
         eq_(200, response.status_code)
         doc = pq(response.content)
-        doc_content = doc('#review-revision').text()
+        doc_content = doc('review-revision').text()
         message = 'A newer revision has already been reviewed.'
-        check = doc_content.find(message)
-        eq_(1, check)
+        assert message in doc_content
 
     def test_fancy_renderer(self):
         """Make sure it renders the whizzy new wiki syntax."""
