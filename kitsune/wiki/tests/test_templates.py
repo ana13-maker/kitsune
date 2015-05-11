@@ -1253,18 +1253,13 @@ class ReviewRevisionTests(TestCaseBase):
         message2 = "But there is another latest revision which is waiting for review."
 
         # While there is no unapproved revision after the current revision.
-        response1 = response
-        doc = pq(response1.content)
+        doc = pq(response.content)
         doc_content = doc('.grid_9 #review-revision').text()
         assert message1 in doc_content
         assert message2 not in doc_content
         # While there is Unapproved revision after the Current Revision
         r3 = revision(document=r1.document, is_approved=False)
         r3.save()
-        response2 = get(self.client, 'wiki.review_revision',
-                        args=[r1.document.slug, r1.id])
-        doc = pq(response2.content)
-        doc_content = doc('.grid_9 #review-revision').text()
         assert message1 in doc_content
         assert message2 in doc_content
 
