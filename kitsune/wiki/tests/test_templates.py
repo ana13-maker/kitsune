@@ -1240,7 +1240,7 @@ class ReviewRevisionTests(TestCaseBase):
         """Verify that its not possible to review a revision older than the current revision"""
         r1 = revision(is_approved=False, save=True)
         r2 = revision(document=r1.document, is_approved=True, save=True)
-        r1.document.current_revision() = r2
+        r1.document.current_revision = r2
         r1.document.save()
         u = user(save=True)
         add_permission(u, Revision, 'review_revision')
