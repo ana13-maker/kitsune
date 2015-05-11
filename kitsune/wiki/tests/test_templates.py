@@ -1236,8 +1236,8 @@ class ReviewRevisionTests(TestCaseBase):
         add_permission(self.user, Document, 'edit_needs_change')
         self.client.login(username=self.user.username, password='testpass')
 
-    def test_review_passed_revision(self):
-        """Verify that its not possible to review a revision which is older than the current revision"""
+    def test_review_past_revision(self):
+        """Verify that its not possible to review a revision older than the current revision"""
         r1 = revision(is_approved=False, save=True)
         r2 = revision(document=r1.document, is_approved=True)
         r2.save()
@@ -1245,13 +1245,28 @@ class ReviewRevisionTests(TestCaseBase):
         add_permission(u, Revision, 'review_revision')
         self.client.login(username=u.username, password='testpass')
 
+        # Get the data of the document
         response = get(self.client, 'wiki.review_revision',
                        args=[r1.document.slug, r1.id])
         eq_(200, response.status_code)
-        doc = pq(response.content)
+        message1 = "A newer revision has already been reviewed."
+        message2 = "But there is another latest revision which is waiting for review."
+
+        # While there is no unapproved revision after the current revision.
+        response1 = response
+        doc = pq(response1.content)
         doc_content = doc('.grid_9 #review-revision').text()
-        message = "A newer revision has already been reviewed."
-        assert message in doc_content
+        assert message1 in doc_content
+        assert message2 not in doc_content
+        # While there is Unapproved revision after the Current Revision
+        r3 = revision(document=r1.document, is_approved=False)
+        r3.save()
+        response2 = get(self.client, 'wiki.review_revision',
+                        args=[r1.document.slug, r1.id])
+        doc = pq(response2.content)
+        doc_content = doc('.grid_9 #review-revision').text()
+        assert message1 in doc_content
+        assert message2 in doc_content
 
     def test_fancy_renderer(self):
         """Make sure it renders the whizzy new wiki syntax."""
