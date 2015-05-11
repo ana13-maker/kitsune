@@ -1239,8 +1239,7 @@ class ReviewRevisionTests(TestCaseBase):
     def test_review_past_revision(self):
         """Verify that its not possible to review a revision older than the current revision"""
         r1 = revision(is_approved=False, save=True)
-        r2 = revision(document=r1.document, is_approved=True)
-        r2.save()
+        revision(document=r1.document, is_approved=True, save=True)
         u = user(save=True)
         add_permission(u, Revision, 'review_revision')
         self.client.login(username=u.username, password='testpass')
@@ -1258,8 +1257,13 @@ class ReviewRevisionTests(TestCaseBase):
         assert message1 in doc_content
         assert message2 not in doc_content
         # While there is Unapproved revision after the Current Revision
-        r3 = revision(document=r1.document, is_approved=False)
-        r3.save()
+        r2 = revision(is_approved=False, creator=u, save=True)
+        revision(document=r2.document, is_approved=True, creator=u, save=True)
+        revision(document=r2.document, is_approved=False, creator=u, save=True)
+        response = get(self.client, 'wiki.review_revision',
+                       args=[r2.document.slug, r2.id])
+        doc = pq(response.content)
+        doc_content = doc('.grid_9 #review-revision').text()
         assert message1 in doc_content
         assert message2 in doc_content
 
