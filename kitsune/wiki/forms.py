@@ -13,8 +13,7 @@ from kitsune.wiki.models import (
     Document, Revision, MAX_REVISION_COMMENT_LENGTH)
 from kitsune.wiki.tasks import add_short_links
 from kitsune.wiki.widgets import (
-    RadioFieldRendererWithHelpText, ProductTopicsAndSubtopicsWidget,
-    RelatedDocumentsWidget)
+    RadioFieldRendererWithHelpText, ProductTopicsAndSubtopicsWidget)
 
 
 TITLE_REQUIRED = _lazy(u'Please provide a title.')
@@ -70,9 +69,6 @@ class DocumentForm(forms.ModelForm):
 
         products_field = self.fields['products']
         products_field.choices = Product.objects.values_list('id', 'title')
-
-        related_documents_field = self.fields['related_documents']
-        related_documents_field.choices = Document.objects.values_list('id', 'title')
 
         # If user hasn't permission to frob is_archived, remove the field. This
         # causes save() to skip it as well.
@@ -138,11 +134,6 @@ class DocumentForm(forms.ModelForm):
         required=False,
         widget=ProductTopicsAndSubtopicsWidget())
 
-    related_documents = forms.MultipleChoiceField(
-        label=_lazy(u'Related documents:'),
-        required=False,
-        widget=RelatedDocumentsWidget())
-
     locale = forms.CharField(widget=forms.HiddenInput())
 
     needs_change = forms.BooleanField(
@@ -184,7 +175,7 @@ class DocumentForm(forms.ModelForm):
         model = Document
         fields = ('title', 'slug', 'category', 'is_localizable', 'products',
                   'topics', 'locale', 'is_archived', 'allow_discussion',
-                  'needs_change', 'needs_change_comment', 'related_documents')
+                  'needs_change', 'needs_change_comment')
 
     def save(self, parent_doc, **kwargs):
         """Persist the Document form, and return the saved Document."""

@@ -36,37 +36,23 @@
 
     $(document).on('click', '.close-button', function() {
       var $this = $(this);
-      var $target;
       if ($this.data('close-id')) {
-        $target = $('#' + $this.data('close-id'));
+        $('#' + $this.data('close-id')).hide();
         if ($this.data('close-memory') == 'remember') {
           if (Modernizr.localstorage) {
             localStorage.setItem($this.data('close-id') + '.closed', true);
           }
         }
       } else {
-        $target = $this.parent();
-      }
-      if ($this.data('close-type') === 'remove') {
-        $target.remove();
-      } else {
-        $target.hide();
+        $this.parent().hide();
       }
     });
 
     $('[data-close-memory="remember"]').each(function() {
-      var $this = $(this);
-      var id = $this.data('close-id');
+      var id = $(this).data('close-id');
       if (id) {
-        if (Modernizr.localstorage) {
-          if (localStorage.getItem(id + '.closed') === 'true') {
-            var $target = $('#' + id);
-            if ($this.data('close-type') === 'remove') {
-              $target.remove();
-            } else {
-              $('#' + id).hide();
-            }
-          }
+        if (localStorage.getItem(id + '.closed') === 'true') {
+          $('#' + id).hide();
         }
       }
     });
