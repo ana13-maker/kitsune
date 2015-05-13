@@ -61,6 +61,34 @@ article {
   }
 }
 
+.sidebar-nav {
+  &.related-products {
+    > li {
+      > a {
+        > span {
+          box-sizing: border-box;
+          display: block;
+          min-height: 24px;
+          padding-left: 34px;
+          padding-top: 3px;
+          position: relative;
+
+          img {
+            background-repeat: no-repeat;
+            background-size: cover;
+            height: 24px;
+            left: 0;
+            margin-top: -12px;
+            position: absolute;
+            top: 50%;
+            width: 24px;
+          }
+        }
+      }
+    }
+  }
+}
+
 #os_input,
 #browser_input {
   cursor: pointer;
@@ -615,6 +643,53 @@ textarea[name="content"] {
   }
 }
 
+#search-related {
+  box-sizing: border-box;
+  width: 100%;
+}
+
+#related-docs-list {
+  margin-top: 10px;
+
+  > li {
+    background: #f0f0f0;
+    border: 1px solid @borderLightGrey;
+    display: block;
+    margin-bottom: 8px;
+    padding: 8px 26px 8px 5px;
+    position: relative;
+    width: auto;
+
+    input {
+      display: none;
+    }
+
+    .close-button {
+      cursor: pointer;
+      font-size: 16px;
+      font-weight: bold;
+      height: 16px;
+      line-height: 16px;
+      margin-top: -8px;
+      position: absolute;
+      right: 5px;
+      text-align: center;
+      top: 50%;
+      width: 16px;
+
+      &:before {
+        content: '\2715'; /* ✕ */
+      }
+    }
+  }
+
+  > li.empty-message {
+    background: transparent;
+    border: 0;
+    padding: 0;
+  }
+}
+
 /* Translate specific */
 
 .translate {
@@ -912,6 +987,13 @@ div.video .kbox-container {
 
 /* Unhelpful vote survey */
 aside {
+  h4 {
+    margin-bottom: 6px;
+    margin-top: 24px;
+    font-size: 12px;
+    text-transform: uppercase;
+  }
+
   .document-vote {
     span {
       display: block;
@@ -1082,6 +1164,31 @@ article {
     background: #ffaaaa;
     color: #000;
     text-decoration: none;
+  }
+}
+
+.document {
+  #related-documents {
+    margin: 30px 0;
+    padding: 0 30px;
+
+    h4 {
+      font-size: 12px;
+      margin: 0;
+      text-transform: uppercase;
+    }
+
+    ul {
+      list-style: none;
+      margin: 0;
+      padding: 0;
+
+      > li {
+        font-size: 12px;
+        margin-top: 8px;
+        text-transform: uppercase;
+      }
+    }
   }
 }
 
