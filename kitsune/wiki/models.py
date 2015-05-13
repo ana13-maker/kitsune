@@ -127,6 +127,9 @@ class Document(NotificationsMixin, ModelBase, BigVocabTaggableMixin,
     # Dictates the order in which articles are displayed.
     display_order = models.IntegerField(default=1, db_index=True)
 
+    # List of related documents
+    related_documents = models.ManyToManyField('self')
+
     # firefox_versions,
     # operating_systems:
     #    defined in the respective classes below. Use them as in
@@ -324,6 +327,12 @@ class Document(NotificationsMixin, ModelBase, BigVocabTaggableMixin,
     @property
     def language(self):
         return settings.LANGUAGES_DICT[self.locale.lower()]
+
+    @property
+    def related_products(self):
+        related_pks = [d.pk for d in self.related_documents.all()]
+        related_pks.append(self.pk)
+        return Product.objects.filter(document__in=related_pks).distinct()
 
     @property
     def is_hidden_from_search_engines(self):

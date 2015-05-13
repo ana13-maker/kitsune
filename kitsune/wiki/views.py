@@ -203,6 +203,7 @@ def document(request, document_slug, template=None, document=None):
         'product_topics': product_topics,
         'product': product,
         'products': products,
+        'related_products': doc.related_products.exclude(pk=product.pk),
         'ga_push': ga_push,
         'breadcrumb_items': breadcrumbs,
     }
@@ -542,6 +543,36 @@ def review_revision(request, document_slug, revision_id):
     revision_contributors = list(set(
         based_on_revs.values_list('creator__username', flat=True)))
 
+    # Get Unreviewed Revisions
+    unreviewed_revision = list(Revision.objects.filter(
+            document=doc,
+            is_approved=False).order_by('-created'))
+    try:
+        unreviewed_revision
+    except IndexError:
+        unreviewed_revision = ''
+
+    # Remove the revision which is reviewing and get last 5 revision
+    if rev in unreviewed_revision:
+        unreviewed_revision.remove(rev)
+    unreviewed_revision = unreviewed_revision[0:5]
+
+    # Get latest revision which is still not approved. Use **latest_revision_id** to get the id.
+    try:
+        latest_unapproved_revision = Revision.objects.filter(
+            document=doc,
+            is_approved=False).order_by('-id')[0]
+        latest_unapproved_revision_id = latest_unapproved_revision.id
+    except IndexError:
+        latest_unapproved_revision_id = None
+
+    # Get Current Revision id only if there is any approved revision.
+    # Return None if there is no current revision
+    if doc.current_revision is not None:
+        current_revision_id = doc.current_revision.id
+    else:
+        current_revision_id = None
+
     # Don't include the reviewer in the recent contributors list.
     if request.user.username in revision_contributors:
         revision_contributors.remove(request.user.username)
@@ -625,7 +656,9 @@ def review_revision(request, document_slug, revision_id):
     data = {'revision': rev, 'document': doc, 'form': form,
             'parent_revision': parent_revision,
             'revision_contributors': list(revision_contributors),
-            'should_ask_significance': should_ask_significance}
+            'should_ask_significance': should_ask_significance,
+            'latest_unapproved_revision_id': latest_unapproved_revision_id,
+            'current_revision_id': current_revision_id}
     return render(request, template, data)
 
 
@@ -1319,6 +1352,8 @@ def _document_form_initial(document):
                 document=document).values_list('id', flat=True),
             'products': Product.objects.filter(
                 document=document).values_list('id', flat=True),
+            'related_documents': Document.objects.filter(
+                related_documents=document).values_list('id', flat=True),
             'allow_discussion': document.allow_discussion,
             'needs_change': document.needs_change,
             'needs_change_comment': document.needs_change_comment}
