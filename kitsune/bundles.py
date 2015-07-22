@@ -306,18 +306,23 @@ PIPELINE_JS = {
         'output_filename': 'build/community-min.js'
     },
     'community-new-questions': {
-        'source_filenames': (
-            # This uses the minified version in production because it is optimized to leave
-            # out lots of debug stuff, so it is significantly smaller than just minifying react.js.
-            # But uses the full version in dev environment because it produces much nicer 
-            # error messages.
-            if settings.DEBUG:
+        if settings.DEBUG:
+            'source_filenames': (
+                # This uses the minified version in production because it is optimized to leave
+                # out lots of debug stuff, so it is significantly smaller than just minifying react.js.
+                # But uses the full version in dev environment because it produces much nicer 
+                # error messages.
+            
                 'react/react.js',
-            else:
-                'react/react.min.js',
-            'pikaday/pikaday.js',
-            'community/js/community-questions.browserify.js',
-        ),
+                'pikaday/pikaday.js',
+                'community/js/community-questions.browserify.js',
+            ),
+        else:
+            'source_filenames': (
+                'react/react.mini.js',
+                'pikaday/pikaday.js',
+                'community/js/community-questions.browserify.js',
+            ),
         'output_filename': 'build/community-questions-min.js'
     },
     'community-new-l10n': {
