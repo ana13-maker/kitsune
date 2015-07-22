@@ -1,3 +1,4 @@
+from django.conf import settings
 # Bundles for JS/CSS Minification
 
 PIPELINE_CSS = {
@@ -306,13 +307,14 @@ PIPELINE_JS = {
     },
     'community-new-questions': {
         'source_filenames': (
-            # This uses the minified version because it is optimized to leave
-            # out lots of debug stuff, so it is significantly smaller than
-            # just minifying react.js.
-            # TODO: Figure out how to include the full sized version in dev,
-            # because it produces much nicer error messages.
-            'react/react.min.js',
-            # 'react/react.js',
+            # This uses the minified version in production because it is optimized to leave
+            # out lots of debug stuff, so it is significantly smaller than just minifying react.js.
+            # But uses the full version in dev environment because it produces much nicer 
+            # error messages.
+            if settings.DEBUG:
+                'react/react.js',
+            else:
+                'react/react.min.js',
             'pikaday/pikaday.js',
             'community/js/community-questions.browserify.js',
         ),
