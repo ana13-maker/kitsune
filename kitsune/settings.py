@@ -122,6 +122,8 @@ SUMO_LANGUAGES = (
     'hi-IN',
     'hr',
     'hu',
+    'dsb',
+    'hsb',
     'id',
     'ig',
     'it',
@@ -131,6 +133,7 @@ SUMO_LANGUAGES = (
     'ko',
     'ln',
     'lt',
+    'mk',
     'ml',
     'ne-NP',
     'nl',
@@ -208,6 +211,8 @@ SIMPLE_WIKI_LANGUAGES = [
     'et',
     'ga-IE',
     'gl',
+    'dsb',
+    'hsb',
     'kn',
     'ml',
     'tn',
@@ -241,7 +246,6 @@ NON_SUPPORTED_LOCALES = {
     'ff': None,
     'fur': 'it',
     'gd': None,
-    'hsb': 'de',
     'hy-AM': None,
     'ilo': None,
     'is': None,
@@ -249,7 +253,6 @@ NON_SUPPORTED_LOCALES = {
     'lg': None,
     'lij': 'it',
     'mai': None,
-    'mk': None,
     'mn': None,
     'mr': None,
     'ms': None,
@@ -429,8 +432,6 @@ MIDDLEWARE_CLASSES = (
     'commonware.middleware.NoVarySessionMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
 
-    'kitsune.users.middleware.LogoutDeactivatedUsersMiddleware',
-
     # This should come before TokenLoginMiddleware, because
     # TokenLoginMiddleware uses this to tell users they have been
     # automatically logged. It also has to come after
@@ -477,7 +478,7 @@ AUTHENTICATION_BACKENDS = (
 )
 AUTH_PROFILE_MODULE = 'users.Profile'
 USER_AVATAR_PATH = 'uploads/avatars/'
-DEFAULT_AVATAR = 'img/avatar.png'
+DEFAULT_AVATAR = 'sumo/img/avatar.png'
 AVATAR_SIZE = 48  # in pixels
 MAX_AVATAR_FILE_SIZE = 131072  # 100k, in bytes
 GROUP_AVATAR_PATH = 'uploads/groupavatars/'
@@ -876,7 +877,7 @@ GA_START_DATE = date(2012, 11, 10)
 MOBILE_COOKIE = 'msumo'
 
 # Directory of JavaScript test files for django_qunit to run
-QUNIT_TEST_DIRECTORY = os.path.join('kitsune', 'sumo', 'static', 'js', 'tests')
+QUNIT_TEST_DIRECTORY = os.path.join('kitsune', 'sumo', 'static', 'sumo', 'js', 'tests')
 
 # Key to access /services/version. Set to None to disallow.
 VERSION_CHECK_TOKEN = None
@@ -920,7 +921,7 @@ REST_FRAMEWORK = {
     ),
     'DEFAULT_AUTHENTICATION_CLASSES': (
         'rest_framework.authentication.TokenAuthentication',
-        'rest_framework.authentication.SessionAuthentication',
+        'kitsune.sumo.api.InactiveSessionAuthentication',
     ),
 }
 

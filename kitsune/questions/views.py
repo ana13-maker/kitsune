@@ -21,8 +21,10 @@ from django.views.decorators.http import (require_POST, require_GET,
                                           require_http_methods)
 
 import jingo
+import waffle
 from ordereddict import OrderedDict
 from mobility.decorators import mobile_template
+from rest_framework.renderers import JSONRenderer
 from session_csrf import anonymous_csrf
 from statsd import statsd
 from taggit.models import Tag
@@ -32,6 +34,7 @@ from tower import ugettext as _, ugettext_lazy as _lazy
 
 from kitsune.access.decorators import permission_required, login_required
 from kitsune.community.utils import top_contributors_questions
+from kitsune.products.api import ProductSerializer, TopicSerializer
 from kitsune.products.models import Product, Topic
 from kitsune.questions import config
 from kitsune.questions.events import QuestionReplyEvent, QuestionSolvedEvent
@@ -58,6 +61,7 @@ from kitsune.tags.utils import add_existing_tag
 from kitsune.upload.models import ImageAttachment
 from kitsune.upload.views import upload_imageattachment
 from kitsune.users.forms import RegisterForm
+from kitsune.users.helpers import display_name
 from kitsune.users.models import Setting
 from kitsune.users.utils import handle_login, handle_register
 from kitsune.wiki.facets import documents_for, topics_for
@@ -460,18 +464,36 @@ def edit_details(request, question_id):
 
 
 @ssl_required
+@anonymous_csrf
+def aaq_react(request):
+    request.session['in-aaq'] = True
+    to_json = JSONRenderer().render
+    products = ProductSerializer(Product.objects.filter(visible=True), many=True)
+    topics = TopicSerializer(Topic.objects.filter(visible=True, parent=None), many=True)
+
+    return render(request, 'questions/new_question_react.html', {
+        'products_json': to_json(products.data),
+        'topics_json': to_json(topics.data),
+    })
+
+
+@ssl_required
 @mobile_template('questions/{mobile/}new_question.html')
 @anonymous_csrf  # This view renders a login form
 def aaq(request, product_key=None, category_key=None, showform=False,
         template=None, step=0):
     """Ask a new question."""
 
+    # Use react version if waffle flag is set
+    if waffle.flag_is_active(request, 'new_aaq'):
+        return aaq_react(request)
+
     # This tells our LogoutDeactivatedUsersMiddleware not to
     # boot this user.
     request.session['in-aaq'] = True
 
-    if (request.LANGUAGE_CODE not in QuestionLocale.objects.locales_list()
-            and request.LANGUAGE_CODE != settings.WIKI_DEFAULT_LANGUAGE):
+    if (request.LANGUAGE_CODE not in QuestionLocale.objects.locales_list() and
+            request.LANGUAGE_CODE != settings.WIKI_DEFAULT_LANGUAGE):
 
         locale, path = split_path(request.path)
         path = '/' + settings.WIKI_DEFAULT_LANGUAGE + '/' + path
@@ -1674,6 +1696,34 @@ def metrics(request, locale_code=None):
     }
 
     return render(request, template, data)
+
+
+@require_POST
+@permission_required('users.screen_share')
+def screen_share(request, question_id):
+    question = get_object_or_404(Question, pk=question_id, is_spam=False)
+
+    if not question.allows_new_answer(request.user):
+        raise PermissionDenied
+
+    content = _("I invited {user} to a screen sharing session, "
+                "and I'll give an update here once we are done.")
+    answer = Answer(question=question, creator=request.user,
+                    content=content.format(user=display_name(question.creator)))
+    answer.save()
+    statsd.incr('questions.answer')
+
+    question.add_metadata(screen_sharing='true')
+
+    if Setting.get_for_user(request.user, 'questions_watch_after_reply'):
+        QuestionReplyEvent.notify(request.user, question)
+
+    message = jingo.render_to_string(request, 'questions/message/screen_share.ltxt', {
+        'asker': display_name(question.creator), 'contributor': display_name(request.user)})
+
+    return HttpResponseRedirect('%s?to=%s&message=%s' % (reverse('messages.new'),
+                                                         question.creator.username,
+                                                         message))
 
 
 def _search_suggestions(request, text, locale, product_slugs):

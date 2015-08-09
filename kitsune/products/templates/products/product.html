@@ -9,17 +9,16 @@
 
 {% if product.slug == 'mobile' %}
   {# Firefox for Android has a special separate survey. #}
-  {% set extra_body_attrs = {'data-surveygizmo-url': 'http://qsurvey.mozilla.com/s3/63ac9fdb1ce1', 'data-product-slug': product.slug} %}
-{% else %}
-  {% set extra_body_attrs = {'data-product-slug': product.slug} %}
+  {% set SURVEY_GIZMOS = ['mobile'] %}
 {% endif %}
+{% set extra_body_attrs = {'data-product-slug': product.slug} %}
 
 {% block title %}{{ _('{product} Help')|f(product=_(product.title, 'DB: products.Product.title')) }}{% endblock %}
 
 {% block content %}
   <div class="grid_12">
     <h1 class="product-title cf">
-      <img src="{{ STATIC_URL }}img/blank.png" alt="" class="logo-sprite"
+      <img src="{{ STATIC_URL }}sumo/img/blank.png" alt="" class="logo-sprite"
         style="{% if product.image and product.image_offset %}background-image: url({{ product.sprite_url() }}); background-position: -100px -{{ 100 + (product.image_offset * 296) }}px;{% else %}background-image: url({{ product.image_url }}){% endif %}" />
       {{ _(product.title, 'DB: products.Product.title') }}
     </h1>

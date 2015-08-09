@@ -40,8 +40,8 @@ cryptography==0.7.2
 # sha256: MxnZwEi7pMyJqWkRgdDgIYei8JtDQ_0vz2zL-EtO4Yo
 dennis==0.6.1
 
-# sha256: 8KsSx8iKAzaB5E4uS_SpPZPIXVsejpyHW0uRerskaSE
-Django==1.7.8
+# sha256: Tz-f5OXSD_jtapC10vLfLY_AVOR4zcw9uBxrKb0heGA
+Django==1.7.9
 
 # sha256: M7YuOXN4svxB-YixuXUuT1Y5rfNYJN5wxGqKDmv1pVs
 django-activity-stream==0.5.1
@@ -165,6 +165,9 @@ elasticsearch==1.2.0
 # sha256: 08GfJqajRinBjHdfWd_F3VlXZMcitXotpW6_tpuU5Ec
 enum34==1.0.4
 
+# sha256: zYMG5kw6EV3soTZoXpRduI_-FxOCAS7JOO0kGiDdfro
+factory-boy==2.5.2
+
 # sha256: A3VLx7JWOXwbZG5QSOIpFZD1CAFxrbiwD04tc4THbu4
 GitPython==0.1.7
 
@@ -271,15 +274,11 @@ https://github.com/getsentry/raven-python/archive/ab53d276262a0fa2932588b34de4e6
 # sha256: pKrx7rUrWH9IbMYyT2MF62gW_bVPony2JPDx0TecNP0
 https://github.com/andymccurdy/redis-py/archive/43aa23146ad287959369161038a4e5cda985a259.tar.gz#egg=redis
 
-# sha256: e3c179Ox4jI9yfzvBgs4DQX18YvQ8kf16edKYoJ53mY
-requests==2.5.1
+# sha256: Vdf1YZ2q6U7Enuge2Mhl5aKkfwu_jgbPlGNr7hA-r2U
+requests==2.5.3
 
 # sha256: ngIjuJUY7axhqXtW_3jycQVs4IyKF8a2RK7yRPrIPyM
 requests-oauthlib==0.4.2
-
-# schematic: master
-# sha256: ELrq_ifCkWujoqbRrfIsQakd640Hn1kJAu2P36B6Nf8
-https://github.com/jbalogh/schematic/archive/f996182b857769541cfa7659d4f9e864360cddf4.tar.gz#egg=schematic
 
 # sha256: cjlM5ykoyH02UBp1_MU1c30WZU_v1sIWwxUVgpS8wSY
 selenium==2.45.0
@@ -287,9 +286,6 @@ selenium==2.45.0
 # sha256: Qr9imks6STO7PPrPYAXJW3SU_YjNYqe60ajD5kZH6ww
 # sha256: v445sBLQFGpK6vVBNT9bm5Ywu8tawnUFhJrIlrz_L2o
 setuptools==0.9.8
-
-# sha256: _lMoR-CPEVj4EJr9NJdUBZ4QFYMNsYjXOwHi7MD35Sg
-simplejson==3.1.2
 
 # sha256: 4kBSQR_E-9H2cmNVN8P8IzDZSBsYwDF2lbRiWVEskdU
 six==1.9.0
