@@ -104,8 +104,7 @@ ORDER_BY = OrderedDict([
 def product_list(request, template):
     """View to select a product to see related questions."""
     return render(request, template, {
-        'products': Product.objects.filter(
-            questions_locales__locale__in=[request.LANGUAGE_CODE])
+        'products': Product.objects.filter(questions_locales__locale=request.LANGUAGE_CODE)
     })
 
 
@@ -468,8 +467,10 @@ def edit_details(request, question_id):
 def aaq_react(request):
     request.session['in-aaq'] = True
     to_json = JSONRenderer().render
-    products = ProductSerializer(Product.objects.filter(visible=True), many=True)
-    topics = TopicSerializer(Topic.objects.filter(visible=True, parent=None), many=True)
+    products = ProductSerializer(
+        Product.objects.filter(questions_locales__locale=request.LANGUAGE_CODE),
+        many=True)
+    topics = TopicSerializer(Topic.objects.filter(in_aaq=True), many=True)
 
     return render(request, 'questions/new_question_react.html', {
         'products_json': to_json(products.data),
@@ -516,6 +517,8 @@ def aaq(request, product_key=None, category_key=None, showform=False,
             ua = request.META.get('HTTP_USER_AGENT', '').lower()
             if 'firefox' in ua and 'android' not in ua:
                 product_key = 'firefox-os'
+            elif 'fxios' in ua:
+                product_key = 'ios'
             else:
                 product_key = 'mobile'
 

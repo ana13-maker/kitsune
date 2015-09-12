@@ -97,6 +97,7 @@ SUMO_LANGUAGES = (
     'ar',
     'az',
     'bg',
+    'bm',
     'bn-BD',
     'bn-IN',
     'bs',
@@ -133,6 +134,7 @@ SUMO_LANGUAGES = (
     'ko',
     'ln',
     'lt',
+    'mg',
     'mk',
     'ml',
     'ne-NP',
@@ -147,7 +149,7 @@ SUMO_LANGUAGES = (
     'sk',
     'sl',
     'sq',
-    'sr-Cyrl',
+    'sr',
     'sw',
     'sv',
     'ta',
@@ -172,6 +174,7 @@ SUMO_LANGUAGES = (
 # to add content.
 FXOS_LANGUAGES = [
     'af',
+    'bm',
     'bn-BD',
     'bn-IN',
     'cs',
@@ -188,6 +191,7 @@ FXOS_LANGUAGES = [
     'ig',
     'it',
     'ln',
+    'mg',
     'nl',
     'pl',
     'pt-BR',
@@ -196,7 +200,7 @@ FXOS_LANGUAGES = [
     'ru',
     'sr',
     'ta',
-    'sr-Cyrl',
+    'sr',
     'sw',
     'tr',
     'wo',
@@ -642,6 +646,7 @@ STANDALONE_DOMAINS = [
     TEXT_DOMAIN,
     'javascript',
     'yaocho',
+    'buddyup',
 ]
 
 STATICI18N_DOMAIN = 'javascript'
