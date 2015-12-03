@@ -15,9 +15,8 @@ chief-james==1.0.0
 
 # sha256: DLrodg9IUdSApwtyrOWwdfgZHs-Jm8l0J3FeUPsOkLk
 django-debug-toolbar==1.4.0
-
-# sha256: rWInLeCyFLq6vMM5d7CWQlS8BsPcHOaN0-6FNcOdICg
-django-sslserver==0.16
+# sha256: DcQq0cP8Yttg6S5O-HnzrvTco61_o146MoZukfNbGwM
+django-sslserver==0.15
 
 # sha256: x9txeBCraWX2bIzwOYqYydjfmC2jm0zX8WKRHriVlvo
 docutils==0.12
