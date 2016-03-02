@@ -1,4 +1,6 @@
 import json
+import os
+
 from django.contrib.auth.models import User
 
 
@@ -17,6 +19,7 @@ def enter_data(data):
     create_user(username=user['username'], password=user['password'], email=user['email'])
     create_superuser(username=admin['username'], password=admin['password'], email=admin['email'])
 
-with open('./scripts/travis/variables.json', 'r') as f:
-    data = json.load(f)
-    enter_data(data)
+f = open(os.getcwd() + '/scripts/travis/variables.json', 'r')
+data = json.load(f)
+enter_data(data)
+f.close()
