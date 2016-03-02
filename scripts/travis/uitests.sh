@@ -12,7 +12,7 @@ echo 'Starting a server'
 ./manage.py runsslserver &
 sleep 3
 
-CMD="xvfb-run py.test"
+CMD="py.test"
 CMD="${CMD} -r a"
 CMD="${CMD} --verbose"
 CMD="${CMD} --base-url https://localhost:8000"

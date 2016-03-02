@@ -19,7 +19,7 @@ DATABASES['default']['CONN_MAX_AGE'] = 600
 CELERY_ALWAYS_EAGER = True
 ES_INDEX_PREFIX = 'sumo'
 ES_URLS = ['http://localhost:9200']
-if os.environ.get('TEST_SUITE') == 'smoke':
+if os.environ.get('TEST_SUITE') == 'ui':
 	INSTALLED_APPS = list(INSTALLED_APPS) + ['sslserver']
 SETTINGS
 
