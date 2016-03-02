@@ -38,8 +38,7 @@ class Page(object):
 
     def wait_for_page_to_load(self):
         print self.canonical_url
-        print self.current_url
-        self.wait.until(lambda s: self.canonical_url in self.current_url)
+        self.wait.until(lambda s: self.canonical_url in s.current_url)
         return self
 
     @property
