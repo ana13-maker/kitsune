@@ -7,7 +7,7 @@ export DISPLAY=:99.0
 /sbin/start-stop-daemon --start --quiet --pidfile /tmp/custom_xvfb_99.pid --make-pidfile --background --exec /usr/bin/Xvfb -- :99 -ac -screen 0 1280x1024x16
 
 echo 'Starting a server'
-./manage.py shell < ./scripts/create_user_and_superuser.py
+./manage.py shell < scripts/create_user_and_superuser.py
 ./manage.py generatedata
 ./manage.py runsslserver &
 sleep 3
