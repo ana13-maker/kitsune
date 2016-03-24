@@ -210,6 +210,14 @@ def datetimeformat(context, value, format='shortdatetime'):
     Returns a formatted date/time using Babel's locale settings. Uses the
     timezone from settings.py, if the user has not been authenticated.
     """
+
+    def get_user_or_default_timezone(user, default):
+        try:
+            timezone = Profile.objects.get(user).timezone
+            return timezone
+        except (Profile.DoesNotExist, AttributeError):
+            return default
+
     if not isinstance(value, datetime.datetime):
         # Expecting date value
         raise ValueError(
@@ -225,16 +233,17 @@ def datetimeformat(context, value, format='shortdatetime'):
     else:
         new_value = value
 
-    if 'timezone' not in request.session:
-        if request.user.is_authenticated():
-            try:
-                convert_tzinfo = (Profile.objects.get(user=request.user).timezone or
-                                  default_tzinfo)
-            except (Profile.DoesNotExist, AttributeError):
-                pass
-        request.session['timezone'] = convert_tzinfo
-    else:
-        convert_tzinfo = request.session['timezone']
+    try:
+        if 'timezone' not in request.session:
+            if request.user.is_authenticated():
+                convert_tzinfo = get_user_or_default_timezone(
+                    user=request.user, default=default_tzinfo)
+            request.session['timezone'] = convert_tzinfo
+        else:
+            convert_tzinfo = request.session['timezone']
+
+    except AttributeError:
+        pass
 
     convert_value = new_value.astimezone(convert_tzinfo)
     locale = _babel_locale(_contextual_locale(context))
