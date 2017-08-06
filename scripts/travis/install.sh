@@ -4,7 +4,7 @@ set -e
 
 # Installing dependencies for UI tests
 if [[ $TEST_SUITE == "ui" ]]; then
-  sudo pip install tox
+  sudo pip install -r requirements/test.txt
   echo "Downloading and extracting geckodriver"
   wget https://github.com/mozilla/geckodriver/releases/download/v0.18.0/geckodriver-v0.18.0-linux64.tar.gz
   mkdir geckodriver
