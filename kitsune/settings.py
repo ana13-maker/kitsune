@@ -16,7 +16,7 @@ import djcelery
 from bundles import PIPELINE_CSS, PIPELINE_JS
 from kitsune.lib.sumo_locales import LOCALES
 
-DEBUG = True
+DEBUG = config('DEBUG', default=False, cast=bool)
 STAGE = False
 
 LOG_LEVEL = logging.INFO
@@ -600,6 +600,7 @@ INSTALLED_APPS = (
     # In Django <= 1.6, this "must be placed somewhere after all the apps that
     # are going to be generating activities". Putting it at the end is the safest.
     'actstream',
+    'sslserver'
 )
 
 TEST_RUNNER = 'kitsune.sumo.tests.TestSuiteRunner'
@@ -698,7 +699,7 @@ NUNJUCKS_PRECOMPILE_BIN = path('node_modules/.bin/nunjucks-precompile')
 #
 # Sessions
 SESSION_COOKIE_AGE = 4 * 7 * 24 * 60 * 60  # 4 weeks
-SESSION_COOKIE_SECURE = True
+SESSION_COOKIE_SECURE = config('SESSION_COOKIE_SECURE', default=True, cast=bool)
 SESSION_COOKIE_HTTPONLY = True
 SESSION_EXPIRE_AT_BROWSER_CLOSE = False
 SESSION_ENGINE = 'django.contrib.sessions.backends.cached_db'

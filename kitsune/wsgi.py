@@ -26,10 +26,6 @@ site.addsitedir(os.path.abspath(os.path.join(wsgidir, '../')))
 # For django-celery
 os.environ['CELERY_LOADER'] = 'django'
 
-# Activate virtualenv
-activate_env = os.path.abspath(os.path.join(wsgidir, "../virtualenv/bin/activate_this.py"))
-execfile(activate_env, dict(__file__=activate_env))
-
 # Import for side-effects: set-up
 import manage
 
@@ -46,22 +42,10 @@ import django.conf
 
 # This is what mod_wsgi runs.
 from django.core.wsgi import get_wsgi_application
+from whitenoise.django import DjangoWhiteNoise
 django_app = get_wsgi_application()
 
-# Normally we could let WSGIHandler run directly, but while we're dark
-# launching, we want to force the script name to be empty so we don't create
-# any /z links through reverse.  This fixes bug 554576.
-def application(env, start_response):
-    if 'HTTP_X_ZEUS_DL_PT' in env:
-        env['SCRIPT_URL'] = env['SCRIPT_NAME'] = ''
-    env['wsgi.loaded'] = wsgi_loaded
-    env['platform.name'] = django.conf.settings.PLATFORM_NAME
-
-    if newrelic:
-        return newrelic.agent.wsgi_application()(
-            django_app)(env, start_response)
-
-    return django_app(env, start_response)
+application = DjangoWhiteNoise(django_app)
 
 
 # Uncomment this to figure out what's going on with the mod_wsgi environment.
