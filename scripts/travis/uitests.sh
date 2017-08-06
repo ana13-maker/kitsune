@@ -3,8 +3,8 @@
 set -ex
 
 echo "Starting XVFB for UI tests"
-export DISPLAY=:99.0
-/sbin/start-stop-daemon --start --quiet --pidfile /tmp/custom_xvfb_99.pid --make-pidfile --background --exec /usr/bin/Xvfb -- :99 -ac -screen 0 1280x1024x16
+#export DISPLAY=:99.0
+#/sbin/start-stop-daemon --start --quiet --pidfile /tmp/custom_xvfb_99.pid --make-pidfile --background --exec /usr/bin/Xvfb -- :99 -ac -screen 0 1280x1024x16
 
 echo 'Starting a server'
 docker-compose exec web ./manage.py migrate
@@ -14,7 +14,7 @@ docker-compose exec web ./manage.py generatedata
 docker-compose exec web ./manage.py esreindex --delete
 
 GECKO_DRIVER_PATH="/home/travis/geckodriver/geckodriver"
-PYTEST_ADDOPTS="-n=auto --verbose -r=a --driver=Firefox --base-url=http://localhost:8000"
+PYTEST_ADDOPTS="--verbose --driver=Firefox --base-url=http://localhost:8000"
 PYTEST_ADDOPTS="${PYTEST_ADDOPTS} --variables=scripts/travis/variables.json --driver-path=${GECKO_DRIVER_PATH}"
 if [ -n "${MARK_EXPRESSION}" ]; then PYTEST_ADDOPTS="${PYTEST_ADDOPTS} -m=\"${MARK_EXPRESSION}\""; fi
 
