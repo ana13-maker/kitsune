@@ -13,12 +13,11 @@ docker-compose exec web ./manage.py generatedata
 # Reindex elasticsearch
 docker-compose exec web ./manage.py esreindex --delete
 
-GECKO_DRIVER_PATH="/home/travis/geckodriver/geckodriver"
+GECKO_DRIVER_PATH="~/geckodriver/geckodriver"
 PYTEST_ADDOPTS="--verbose --driver=Firefox --base-url=http://localhost:8000"
 PYTEST_ADDOPTS="${PYTEST_ADDOPTS} --variables=scripts/travis/variables.json --driver-path=${GECKO_DRIVER_PATH}"
 
 echo 'Running UI tests'
-py.test tests/functional/desktop
-py.test tests/functional/mobile
+tox
 
 echo 'Booyahkasha!'
