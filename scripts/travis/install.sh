@@ -8,6 +8,11 @@ if [[ $TEST_SUITE == "ui" ]]; then
   echo "Downloading and extracting geckodriver"
   wget https://github.com/mozilla/geckodriver/releases/download/v0.18.0/geckodriver-v0.18.0-linux64.tar.gz
   mkdir $HOME/geckodriver && tar -xzf geckodriver-v0.18.0-linux64.tar.gz -C $HOME/geckodriver
+
+  export PATH=$HOME/geckodriver:$PATH
+  firefox --version
+  geckodriver --version
+  sh -e /etc/init.d/xvfb start
 fi
 
 if [[ $TEST_SUITE == "lint" ]]; then
