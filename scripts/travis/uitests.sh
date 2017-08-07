@@ -12,6 +12,7 @@ docker-compose exec web ./manage.py create_travis_user_and_superuser
 docker-compose exec web ./manage.py generatedata
 # Reindex elasticsearch
 docker-compose exec web ./manage.py esreindex --delete
+sh -e /etc/init.d/xvfb start
 PYTEST_BASE_URL="http://localhost:8000"
 PYTEST_ADDOPTS="--verbose --driver=Firefox --variables=scripts/travis/variables.json"
 
