@@ -9,9 +9,9 @@ env:
   globals:
   - DJANGO_LIVE_TEST_SERVER_ADDRESS="localhost:9900-9999"
   matrix:
-  - TEST_SUITE=lint
+#  - TEST_SUITE=lint
   - TEST_SUITE=ui MARK_EXPRESSION=smoke
-  - TEST_SUITE=docker
+#  - TEST_SUITE=docker
 matrix:
   fast_finish: true
 install: travis_retry scripts/travis/install.sh

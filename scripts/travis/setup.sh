@@ -13,7 +13,7 @@ export UID
 
 echo "building and starting docker container"
 docker-compose up -d --build mariadb  # Build, init DB (can be slow)
-docker-compose up -d --build
+docker-compose up -d
 
 echo "Updating product details"
 docker-compose exec web python manage.py update_product_details
