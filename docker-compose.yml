@@ -2,6 +2,7 @@ version: '2.1'
 services:
   web:
     build: .
+    image: safwan/kitsune
     command: gunicorn -w 4 --bind 0.0.0.0:8000 --access-logfile=- --timeout=120  kitsune.wsgi:application
     user: ${UID:-kitsune}
     volumes:
