@@ -7,6 +7,7 @@ export DISPLAY=:99.0
 
 
 echo 'Starting a server'
+sh -e /etc/init.d/xvfb start
 docker-compose exec web ./manage.py migrate
 docker-compose exec web ./manage.py create_travis_user_and_superuser
 docker-compose exec web ./manage.py generatedata
