@@ -12,7 +12,6 @@ if [[ $TEST_SUITE == "ui" ]]; then
   export PATH=$HOME/geckodriver:$PATH
   firefox --version
   geckodriver --version
-  sh -e /etc/init.d/xvfb start
 fi
 
 if [[ $TEST_SUITE == "lint" ]]; then
