@@ -32,6 +32,10 @@ COPY ./bower.json /app/bower.json
 # So all the user need to have access to /.cache
 RUN mkdir /.cache && chmod -R 777 /.cache
 
+RUN chown -R kitsune /app
+# npm and bower tries to write in /home directory. So this permission is needed
+RUN chown -R kitsune /home
+
 USER kitsune
 
 RUN npm install
