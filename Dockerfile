@@ -28,10 +28,15 @@ RUN pip install --no-cache-dir -r requirements/test.txt --require-hashes
 COPY ./package.json /app/package.json
 COPY ./bower.json /app/bower.json
 
-RUN npm install
+# debowerify try to download bower dependency while running collectstatic.
+# So all the user need to have access to /.cache
+RUN mkdir /.cache && chmod -R 777 /.cache
 
+USER kitsune
+
+RUN npm install
 RUN ./node_modules/.bin/bower install --allow-root
 
-# Give permission everyone in static files
+USER root
+
 RUN chmod -R 777 /app
-USER kitsune
