@@ -22,8 +22,8 @@ install:
   - docker-compose exec web ./manage.py collectstatic --noinput
 script:
   - docker-compose exec web flake8 kitsune
-  - docker-compose exec web ./node_modules/.bin/mocha --compilers js:babel/register --recursive kitsune/*/static/*/js/tests/* $@
-  - docker-compose exec -e REUSE_STATIC=1 web ./manage.py test --noinput --nologcapture -a '!search_tests' --with-nicedots
+  - docker-compose exec web sh -c "BABEL_DISABLE_CACHE=1 ./node_modules/.bin/mocha --compilers js:babel/register --recursive kitsune/*/static/*/js/tests/* $@"
+  - docker-compose exec web sh -c "REUSE_STATIC=1 ./manage.py test --noinput --nologcapture -a '!search_tests' --with-nicedots"
 notifications:
   email: false
   irc:
