@@ -33,7 +33,5 @@ RUN npm install
 RUN ./node_modules/.bin/bower install --allow-root
 
 # Give permission everyone in static files
-RUN chmod -R 777 ./node_modules
-RUN chmod -R 777 ./bower_components
-RUN chown -R kitsune /app
+RUN chmod -R 777 /app
 USER kitsune
