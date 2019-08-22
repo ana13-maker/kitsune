@@ -66,8 +66,10 @@ SORTBY_QUESTIONS = (
 
 
 SORT_DOCUMENTS = {
-    'relevance': ('-_score',),
-    'helpful': ('-document_recent_helpful_votes',),
+    'relevance': ('_score',),
+    'helpful': (
+        {'document_recent_helpful_votes': "desc"},
+    ),
 }
 
 SORTBY_DOCUMENTS_CHOICES = (

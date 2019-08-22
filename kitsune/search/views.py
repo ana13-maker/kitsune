@@ -321,46 +321,6 @@ def advanced_search(request, template=None):
         ('updated', cleaned['updated'], cleaned['updated_date'])
     )
 
-    # Start - wiki search configuration
-
-    if cleaned['w'] & constants.WHERE_WIKI:
-        wiki_f = F(model='wiki_document')
-
-        # Category filter
-        if cleaned['category']:
-            wiki_f &= F(document_category__in=cleaned['category'])
-
-        # Locale filter
-        wiki_f &= F(document_locale=language)
-
-        # Product filter
-        products = cleaned['product']
-        for p in products:
-            wiki_f &= F(product=p)
-
-        # Topics filter
-        topics = cleaned['topics']
-        for t in topics:
-            wiki_f &= F(topic=t)
-
-        # Archived bit
-        if not cleaned['include_archived']:
-            wiki_f &= F(document_is_archived=False)
-
-        # Apply sortby
-        sortby = cleaned['sortby_documents']
-        try:
-            searcher = searcher.order_by(*constants.SORT_DOCUMENTS[sortby])
-        except IndexError:
-            # Skip index errors because they imply the user is sending us sortby values
-            # that aren't valid.
-            pass
-
-        doctypes.append(DocumentMappingType.get_mapping_type_name())
-        final_filter |= wiki_f
-
-    # End - wiki search configuration
-
     # Start - support questions configuration
 
     if cleaned['w'] & constants.WHERE_SUPPORT:

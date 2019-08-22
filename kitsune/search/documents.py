@@ -2,6 +2,7 @@ from django.utils import timezone
 from django_elasticsearch_dsl import DocType, fields
 from elasticsearch_dsl.query import Terms, Term, MultiMatch, Bool
 
+from kitsune import search as constants
 from kitsune.questions.models import Question, Answer, AnswerVote
 from kitsune.search import config
 from django.conf import settings
@@ -80,12 +81,14 @@ class WikiDocumentType(KitsuneDocTypeMixin, DocType):
 
     # methods for kitsune usages
     @classmethod
-    def get_filters(cls, locale, products=None, categories=None, topics=None):
+    def get_filters(cls, locale, products=None, categories=None, topics=None,
+                    exclude_archived=True):
         categories = categories or settings.SEARCH_DEFAULT_CATEGORIES
         yield Terms(document_category=categories)
         yield Term(document_locale=locale)
-        yield Term(document_is_archived=False)
         yield Term(index_name=config.WIKI_DOCUMENT_INDEX_NAME)
+        if exclude_archived:
+            yield Term(document_is_archived=False)
 
         if products:
             yield cls.get_product_filters(products=products)
@@ -114,6 +117,10 @@ class WikiDocumentType(KitsuneDocTypeMixin, DocType):
 
     def get_instances_from_related(self, related_instance):
         return related_instance.document
+
+    def sort_search(self, search, sortby):
+        sort = constants.SORT_DOCUMENTS[sortby]
+        return search.sort(*sort)
 
 
 class QuestionDocumentType(KitsuneDocTypeMixin, DocType):
@@ -184,6 +191,70 @@ class QuestionDocumentType(KitsuneDocTypeMixin, DocType):
             return related_instance.question
         elif isinstance(related_instance, AnswerVote):
             return related_instance.answer.question
+
+        # These filters are ternary, they can be either YES, NO, or OFF
+        ternary_filters = ('is_locked', 'is_solved', 'has_answers',
+                           'has_helpful', 'is_archived')
+        d = dict(('question_%s' % filter_name,
+                  _ternary_filter(cleaned[filter_name]))
+                 for filter_name in ternary_filters if cleaned[filter_name])
+        if d:
+            question_f &= F(**d)
+
+        if cleaned['asked_by']:
+            question_f &= F(question_creator=cleaned['asked_by'])
+
+        if cleaned['answered_by']:
+            question_f &= F(question_answer_creator=cleaned['answered_by'])
+
+        q_tags = [t.strip() for t in cleaned['q_tags'].split(',')]
+        for t in q_tags:
+            if t:
+                question_f &= F(question_tag=t)
+
+        # Product filter
+        products = cleaned['product']
+        for p in products:
+            question_f &= F(product=p)
+
+        # Topics filter
+        topics = cleaned['topics']
+        for t in topics:
+            question_f &= F(topic=t)
+
+        # Note: num_voted (with a d) is a different field than num_votes
+        # (with an s). The former is a dropdown and the latter is an
+        # integer value.
+        if cleaned['num_voted'] == constants.INTERVAL_BEFORE:
+            question_f &= F(question_num_votes__lte=max(cleaned['num_votes'], 0))
+        elif cleaned['num_voted'] == constants.INTERVAL_AFTER:
+            question_f &= F(question_num_votes__gte=cleaned['num_votes'])
+
+        # Apply sortby
+        sortby = cleaned['sortby']
+        try:
+            searcher = searcher.order_by(*constants.SORT_QUESTIONS[sortby])
+        except IndexError:
+            # Skip index errors because they imply the user is sending us sortby values
+            # that aren't valid.
+            pass
+
+        # Apply created and updated filters
+        for filter_name, filter_option, filter_date in interval_filters:
+            if filter_option == constants.INTERVAL_BEFORE:
+                before = {filter_name + '__gte': 0,
+                          filter_name + '__lte': max(filter_date, 0)}
+
+                question_f &= F(**before)
+
+            elif filter_option == constants.INTERVAL_AFTER:
+                after = {filter_name + '__gte': min(filter_date, unix_now),
+                         filter_name + '__lte': unix_now}
+
+                question_f &= F(**after)
+
+        doctypes.append(QuestionMappingType.get_mapping_type_name())
+        final_filter |= question_f
 
     # methods for kitsune usages
     @classmethod

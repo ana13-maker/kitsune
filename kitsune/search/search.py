@@ -40,3 +40,17 @@ class SimpleSearch(object):
 
         search = Search(index=indexes).query(query).highlight(*highlighted_fields)
         return search
+
+
+class AdvancedSearch(SimpleSearch):
+
+    def get_queries(self):
+        if self.doc_type & constants.WHERE_WIKI:
+            query = WikiDocumentType.get_query(query=self.query, locale=self.locale,
+                                               products=self.product)
+            yield query
+
+        if self.doc_type & constants.WHERE_SUPPORT:
+            query = QuestionDocumentType.get_query(query=self.query, locale=self.locale,
+                                                   products=self.product)
+            yield query
